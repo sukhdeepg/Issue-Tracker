@@ -17,5 +17,11 @@ class Issue(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=100)
     developer = models.ForeignKey("Developer", on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return f"{self.title} | {self.developer} | resolved: {self.resolved}"
+
 class Developer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.email
