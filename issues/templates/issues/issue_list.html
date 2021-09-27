@@ -1,0 +1,6 @@
+<html>
+    <h1>This is all the issues!</h1>
+    {% for issue in issues %}
+        <a href="/issues/{{ issue.pk }}/">{{ issue.title }}</a>
+    {% endfor %}
+</html>
