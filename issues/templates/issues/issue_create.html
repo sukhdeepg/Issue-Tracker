@@ -1,0 +1,12 @@
+<html>
+    <a href="/issues">Go back to issues</a>
+
+    <hr>
+
+    <h1>Create a new issue</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+</html>
