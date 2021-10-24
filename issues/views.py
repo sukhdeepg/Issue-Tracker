@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Issue, Developer
-from .forms import IssueForm
+from .forms import IssueModelForm
 
 def issue_list(request):
     issues = Issue.objects.all()
@@ -19,21 +19,38 @@ def issue_detail(request, pk):
 
 def issue_create(request):
 
-    form = IssueForm()
+    form = IssueModelForm()
 
     if request.method == "POST":
-        form = IssueForm(request.POST)
+        form = IssueModelForm(request.POST)
         if form.is_valid():
-            title = form.cleaned_data["title"]
-            developer = Developer.objects.first()
-            Issue.objects.create(
-                title=title,
-                category='P1',
-                developer=developer
-            )
+            form.save()
             return redirect("/issues")
 
     context = {
         "form": form
     }
     return render(request, "issues/issue_create.html", context)
+
+def issue_update(request, pk):
+    issue = Issue.objects.get(id=pk)
+
+    form = IssueModelForm(instance=issue) 
+
+    if request.method == "POST":
+        form = IssueModelForm(request.POST, instance=issue)
+        if form.is_valid():
+            form.save()
+            return redirect("/issues")
+
+    context = {
+        "form": form,
+        "issue": issue
+    }
+    return render(request, "issues/issue_update.html", context)
+
+def issue_delete(request, pk):
+    issue = Issue.objects.get(id=pk)
+    issue.delete()
+
+    return redirect("/issues")

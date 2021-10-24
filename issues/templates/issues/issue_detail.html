@@ -1,8 +1,14 @@
 <html>
-    <a href="/issues">Go back to issues</a>
+    <a href="{% url 'issues:issue-list' %}">Go back to issues</a>
 
     <hr>
 
     <h1>This is the details of {{ issue.title }}!</h1>
     <p>The category is: {{ issue.category }}</p>
+    <p>The developer is: {{ issue.developer }}</p>
+    
+    <hr>
+
+    <a href="{% url 'issues:issue-update' issue.pk %}">Update</a>
+    <a href="{% url 'issues:issue-delete' issue.pk %}">Delete</a>
 </html>

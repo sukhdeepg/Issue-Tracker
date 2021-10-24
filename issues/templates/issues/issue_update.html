@@ -3,7 +3,7 @@
 
     <hr>
 
-    <h1>Create a new issue</h1>
+    <h1>Update issue: {{ issue.title }}</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
