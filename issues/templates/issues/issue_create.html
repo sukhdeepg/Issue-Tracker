@@ -1,4 +1,6 @@
-<html>
+{% extends "base.html" %}
+
+{% block content %}
     <a href="{% url 'issues:issue-list' %}">Go back to issues</a>
 
     <hr>
@@ -9,4 +11,4 @@
         {{ form.as_p }}
         <button type="submit">Submit</button>
     </form>
-</html>
+{% endblock content %}

@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from .models import Issue, Developer
 from .forms import IssueModelForm
 
+def landing_page(request):
+    return render(request, "landing.html")
+
 def issue_list(request):
     issues = Issue.objects.all()
     context = {
