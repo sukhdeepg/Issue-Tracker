@@ -1,59 +1,39 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Issue, Developer
+from django.shortcuts import reverse
+from django.views import generic
+from .models import Issue
 from .forms import IssueModelForm
 
-def landing_page(request):
-    return render(request, "landing.html")
+class LandingPageView(generic.TemplateView):
+    template_name = "landing.html"
 
-def issue_list(request):
-    issues = Issue.objects.all()
-    context = {
-        "issues": issues
-    }
-    return render(request, "issues/issue_list.html", context)
+class IssueListView(generic.ListView):
+    template_name = "issues/issue_list.html"
+    queryset = Issue.objects.all()
+    context_object_name = "issues"
 
-def issue_detail(request, pk):
-    issue = Issue.objects.get(id=pk)
-    context = {
-        "issue": issue
-    }
-    return render(request, "issues/issue_detail.html", context)
+class IssueDetailView(generic.DetailView):
+    template_name = "issues/issue_detail.html"
+    queryset = Issue.objects.all()
+    context_object_name = "issue"
 
-def issue_create(request):
+class IssueCreateView(generic.CreateView):
+    template_name = "issues/issue_create.html"
+    form_class = IssueModelForm
 
-    form = IssueModelForm()
+    def get_success_url(self):
+        return reverse("issues:issue-list")
 
-    if request.method == "POST":
-        form = IssueModelForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("/issues")
+class IssueUpdateView(generic.UpdateView):
+    template_name = "issues/issue_update.html"
+    queryset = Issue.objects.all()
+    form_class = IssueModelForm
 
-    context = {
-        "form": form
-    }
-    return render(request, "issues/issue_create.html", context)
+    def get_success_url(self):
+        return reverse("issues:issue-list")
 
-def issue_update(request, pk):
-    issue = Issue.objects.get(id=pk)
+class IssueDeleteView(generic.DeleteView):
+    template_name = "issues/issue_delete.html"
+    queryset = Issue.objects.all()
 
-    form = IssueModelForm(instance=issue) 
-
-    if request.method == "POST":
-        form = IssueModelForm(request.POST, instance=issue)
-        if form.is_valid():
-            form.save()
-            return redirect("/issues")
-
-    context = {
-        "form": form,
-        "issue": issue
-    }
-    return render(request, "issues/issue_update.html", context)
-
-def issue_delete(request, pk):
-    issue = Issue.objects.get(id=pk)
-    issue.delete()
-
-    return redirect("/issues")
+    def get_success_url(self):
+        return reverse("issues:issue-list")
