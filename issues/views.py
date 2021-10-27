@@ -1,4 +1,5 @@
 from django.shortcuts import reverse
+from django.core.mail import send_mail
 from django.views import generic
 from .models import Issue
 from .forms import IssueModelForm
@@ -22,6 +23,15 @@ class IssueCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse("issues:issue-list")
+
+    def form_valid(self, form):
+        send_mail(
+            subject="Issue has been created",
+            message="Test issue message",
+            from_email="test@sukhdeep.tech",
+            recipient_list=["test_recipient@sukhdeep.tech"]
+        )
+        return super(IssueCreateView, self).form_valid(form)
 
 class IssueUpdateView(generic.UpdateView):
     template_name = "issues/issue_update.html"
