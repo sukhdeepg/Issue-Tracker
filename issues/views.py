@@ -1,4 +1,5 @@
 from django.shortcuts import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.views import generic
 from .models import Issue
@@ -14,17 +15,17 @@ class SignupView(generic.CreateView):
 class LandingPageView(generic.TemplateView):
     template_name = "landing.html"
 
-class IssueListView(generic.ListView):
+class IssueListView(LoginRequiredMixin, generic.ListView):
     template_name = "issues/issue_list.html"
     queryset = Issue.objects.all()
     context_object_name = "issues"
 
-class IssueDetailView(generic.DetailView):
+class IssueDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "issues/issue_detail.html"
     queryset = Issue.objects.all()
     context_object_name = "issue"
 
-class IssueCreateView(generic.CreateView):
+class IssueCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "issues/issue_create.html"
     form_class = IssueModelForm
 
@@ -40,7 +41,7 @@ class IssueCreateView(generic.CreateView):
         )
         return super(IssueCreateView, self).form_valid(form)
 
-class IssueUpdateView(generic.UpdateView):
+class IssueUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = "issues/issue_update.html"
     queryset = Issue.objects.all()
     form_class = IssueModelForm
@@ -48,7 +49,7 @@ class IssueUpdateView(generic.UpdateView):
     def get_success_url(self):
         return reverse("issues:issue-list")
 
-class IssueDeleteView(generic.DeleteView):
+class IssueDeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = "issues/issue_delete.html"
     queryset = Issue.objects.all()
 

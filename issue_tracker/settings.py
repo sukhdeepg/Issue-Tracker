@@ -129,3 +129,4 @@ STATIC_ROOT = "static_root"
 AUTH_USER_MODEL = 'issues.User'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = '/issues'
+LOGIN_URL = '/login'

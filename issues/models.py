@@ -4,6 +4,12 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     pass
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
+
 class Issue(models.Model):
     CATEGORY_CHOICES = (
         ('P1', 'P1'),
@@ -22,6 +28,7 @@ class Issue(models.Model):
 
 class Developer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    team = models.ForeignKey(UserProfile, on_delete=models.CASCADE) # team in which the developer belongs
 
     def __str__(self):
         return self.user.email
