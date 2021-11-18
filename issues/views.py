@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.views import generic
 from .models import Issue
 from .forms import IssueModelForm, CustomUserCreationForm
+from developers.mixins import OwnerAndLoginRequiredMixin
 
 class SignupView(generic.CreateView):
     template_name = "registration/signup.html"
@@ -25,7 +26,7 @@ class IssueDetailView(LoginRequiredMixin, generic.DetailView):
     queryset = Issue.objects.all()
     context_object_name = "issue"
 
-class IssueCreateView(LoginRequiredMixin, generic.CreateView):
+class IssueCreateView(OwnerAndLoginRequiredMixin, generic.CreateView):
     template_name = "issues/issue_create.html"
     form_class = IssueModelForm
 
@@ -41,7 +42,7 @@ class IssueCreateView(LoginRequiredMixin, generic.CreateView):
         )
         return super(IssueCreateView, self).form_valid(form)
 
-class IssueUpdateView(LoginRequiredMixin, generic.UpdateView):
+class IssueUpdateView(OwnerAndLoginRequiredMixin, generic.UpdateView):
     template_name = "issues/issue_update.html"
     queryset = Issue.objects.all()
     form_class = IssueModelForm
@@ -49,7 +50,7 @@ class IssueUpdateView(LoginRequiredMixin, generic.UpdateView):
     def get_success_url(self):
         return reverse("issues:issue-list")
 
-class IssueDeleteView(LoginRequiredMixin, generic.DeleteView):
+class IssueDeleteView(OwnerAndLoginRequiredMixin, generic.DeleteView):
     template_name = "issues/issue_delete.html"
     queryset = Issue.objects.all()
 
