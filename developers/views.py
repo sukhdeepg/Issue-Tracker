@@ -22,3 +22,30 @@ class DeveloperCreateView(LoginRequiredMixin, generic.CreateView):
         developer.team = self.request.user.userprofile
         developer.save()
         return super(DeveloperCreateView, self).form_valid(form)
+
+class DeveloperDetailView(LoginRequiredMixin, generic.DetailView):
+    template_name = "developers/developer_detail.html"
+    context_object_name = "developer"
+
+    def get_queryset(self):
+        return Developer.objects.all()
+
+class DeveloperUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "developers/developer_update.html"
+    form_class = DeveloperModelForm
+
+    def get_success_url(self):
+        return reverse("developers:developer-list")
+
+    def get_queryset(self):
+        return Developer.objects.all()
+
+class DeveloperDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = "developers/developer_delete.html"
+    context_object_name = "developer"
+
+    def get_success_url(self):
+        return reverse("developers:developer-list")
+
+    def get_queryset(self):
+        return Developer.objects.all()
