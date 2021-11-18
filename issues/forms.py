@@ -17,5 +17,6 @@ class IssueModelForm(forms.ModelForm):
         fields = (
             'title',
             'category',
+            'team',
             'developer'
         )

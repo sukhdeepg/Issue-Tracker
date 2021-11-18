@@ -18,13 +18,33 @@ class LandingPageView(generic.TemplateView):
 
 class IssueListView(LoginRequiredMixin, generic.ListView):
     template_name = "issues/issue_list.html"
-    queryset = Issue.objects.all()
     context_object_name = "issues"
+    
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_owner:
+            queryset = Issue.objects.filter(team=user.userprofile)
+        else:
+            queryset = Issue.objects.filter(team=user.developer.team)
+            queryset = queryset.filter(developer__user=self.request.user)
+
+        return queryset
 
 class IssueDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "issues/issue_detail.html"
-    queryset = Issue.objects.all()
     context_object_name = "issue"
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_owner:
+            queryset = Issue.objects.filter(team=user.userprofile)
+        else:
+            queryset = Issue.objects.filter(team=user.developer.team)
+            queryset = queryset.filter(developer__user=self.request.user)
+
+        return queryset
 
 class IssueCreateView(OwnerAndLoginRequiredMixin, generic.CreateView):
     template_name = "issues/issue_create.html"
@@ -44,15 +64,21 @@ class IssueCreateView(OwnerAndLoginRequiredMixin, generic.CreateView):
 
 class IssueUpdateView(OwnerAndLoginRequiredMixin, generic.UpdateView):
     template_name = "issues/issue_update.html"
-    queryset = Issue.objects.all()
     form_class = IssueModelForm
+
+    def get_queryset(self):
+        user = self.request.user
+        return Issue.objects.filter(team=user.userprofile)
 
     def get_success_url(self):
         return reverse("issues:issue-list")
 
 class IssueDeleteView(OwnerAndLoginRequiredMixin, generic.DeleteView):
     template_name = "issues/issue_delete.html"
-    queryset = Issue.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        return Issue.objects.filter(team=user.userprofile)
 
     def get_success_url(self):
         return reverse("issues:issue-list")

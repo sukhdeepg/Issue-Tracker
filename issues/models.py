@@ -23,7 +23,8 @@ class Issue(models.Model):
 
     resolved = models.BooleanField(default=False)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=100)
-    developer = models.ForeignKey("Developer", on_delete=models.SET_NULL, null=True)
+    team = models.ForeignKey(UserProfile, on_delete=models.CASCADE) # team in which the developer belongs
+    developer = models.ForeignKey("Developer", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.title} | {self.developer} | resolved: {self.resolved}"
