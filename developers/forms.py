@@ -1,9 +1,15 @@
 from django import forms
-from issues.models import Developer
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+
+User = get_user_model()
 
 class DeveloperModelForm(forms.ModelForm):
     class Meta:
-        model = Developer
+        model = User
         fields = {
-            'user',
+            'email',
+            'username',
+            'first_name',
+            'last_name'
         }

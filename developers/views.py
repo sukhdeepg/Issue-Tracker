@@ -1,4 +1,6 @@
-from django.contrib.auth.models import update_last_login
+import random
+
+from django.core.mail import send_mail
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import reverse
@@ -21,9 +23,20 @@ class DeveloperCreateView(OwnerAndLoginRequiredMixin, generic.CreateView):
         return reverse("developers:developer-list")
 
     def form_valid(self, form):
-        developer = form.save(commit=False)
-        developer.team = self.request.user.userprofile
-        developer.save()
+        user = form.save(commit=False)
+        user.is_agent = True
+        user.is_owner = False
+        user.save()
+        Developer.objects.create(
+            user=user,
+            team=self.request.user.userprofile
+        )
+        send_mail(
+            subject="You are invited to be a developer",
+            message="Please login to start working with Issue Tracker.",
+            from_email="admin@sukhdeep.tech",
+            recipient_list=[user.email]
+        )
         return super(DeveloperCreateView, self).form_valid(form)
 
 class DeveloperDetailView(OwnerAndLoginRequiredMixin, generic.DetailView):
