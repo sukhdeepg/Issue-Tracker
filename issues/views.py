@@ -2,7 +2,7 @@ from django.shortcuts import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.views import generic
-from .models import Issue
+from .models import Issue, UserProfile
 from .forms import IssueModelForm, CustomUserCreationForm
 from developers.mixins import OwnerAndLoginRequiredMixin
 
@@ -24,12 +24,28 @@ class IssueListView(LoginRequiredMixin, generic.ListView):
         user = self.request.user
 
         if user.is_owner:
-            queryset = Issue.objects.filter(team=user.userprofile)
+            queryset = Issue.objects.filter(team=user.userprofile, 
+                developer__isnull=False
+            )
         else:
             queryset = Issue.objects.filter(team=user.developer.team)
             queryset = queryset.filter(developer__user=self.request.user)
 
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(IssueListView, self).get_context_data(**kwargs)
+        user = self.request.user
+        
+        if user.is_owner:
+            queryset = Issue.objects.filter(
+                team=user.userprofile,
+                developer__isnull=True
+            )
+            context.update({
+                "unassigned_issues": queryset
+            })
+        return context
 
 class IssueDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "issues/issue_detail.html"
