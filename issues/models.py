@@ -36,7 +36,6 @@ class Developer(models.Model):
     def __str__(self):
         return self.user.email
 
-
 def post_user_created_signal(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)

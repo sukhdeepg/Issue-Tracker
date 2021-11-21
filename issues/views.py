@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.views import generic
 from .models import Issue, UserProfile
-from .forms import IssueModelForm, CustomUserCreationForm
+from .forms import IssueModelForm, CustomUserCreationForm, AssignDeveloperForm
 from developers.mixins import OwnerAndLoginRequiredMixin
 
 class SignupView(generic.CreateView):
@@ -98,3 +98,24 @@ class IssueDeleteView(OwnerAndLoginRequiredMixin, generic.DeleteView):
 
     def get_success_url(self):
         return reverse("issues:issue-list")
+
+class AssignDeveloperView(OwnerAndLoginRequiredMixin, generic.FormView):
+    template_name = "issues/assign_developer.html"
+    form_class = AssignDeveloperForm
+
+    def get_form_kwargs(self, **kwargs):
+        kwargs = super(AssignDeveloperView, self).get_form_kwargs(**kwargs)
+        kwargs.update({
+            "request": self.request
+        })
+        return kwargs
+
+    def get_success_url(self):
+        return reverse("issues:issue-list")
+
+    def form_valid(self, form):
+        developer = form.cleaned_data["developer"]
+        issue = Issue.objects.get(id=self.kwargs["pk"])
+        issue.developer = developer
+        issue.save()
+        return super(AssignDeveloperView, self).form_valid(form)
