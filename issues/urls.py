@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IssueListView, IssueDetailView, IssueCreateView, IssueUpdateView, IssueDeleteView, AssignDeveloperView
+from .views import IssueListView, IssueDetailView, IssueCreateView, IssueUpdateView, IssueDeleteView, AssignDeveloperView, CategoryListView
 
 app_name = "issues"
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:pk>/update/', IssueUpdateView.as_view(), name='issue-update'),
     path('<int:pk>/delete/', IssueDeleteView.as_view(), name='issue-delete'),
     path('<int:pk>/assign_developer/', AssignDeveloperView.as_view(), name='assign-developer'),
+    path('categories', CategoryListView.as_view(), name='category-list')
 ]

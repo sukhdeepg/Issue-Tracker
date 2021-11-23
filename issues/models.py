@@ -25,6 +25,7 @@ class Issue(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=100)
     team = models.ForeignKey(UserProfile, on_delete=models.CASCADE) # team in which the developer belongs
     developer = models.ForeignKey("Developer", on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey("Category", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.title} | {self.developer} | resolved: {self.resolved}"
@@ -35,6 +36,13 @@ class Developer(models.Model):
 
     def __str__(self):
         return self.user.email
+        
+class Category(models.Model):
+    name = models.CharField(max_length=30)
+    team = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 def post_user_created_signal(sender, instance, created, **kwargs):
     if created:

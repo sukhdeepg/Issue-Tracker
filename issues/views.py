@@ -2,7 +2,7 @@ from django.shortcuts import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.views import generic
-from .models import Issue, UserProfile
+from .models import Issue, Category
 from .forms import IssueModelForm, CustomUserCreationForm, AssignDeveloperForm
 from developers.mixins import OwnerAndLoginRequiredMixin
 
@@ -119,3 +119,32 @@ class AssignDeveloperView(OwnerAndLoginRequiredMixin, generic.FormView):
         issue.developer = developer
         issue.save()
         return super(AssignDeveloperView, self).form_valid(form)
+
+class CategoryListView(LoginRequiredMixin, generic.ListView):
+    template_name = "issues/category_list.html"
+    context_object_name = "category_list"
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryListView, self).get_context_data(**kwargs)
+        user = self.request.user
+
+        if user.is_owner:
+            queryset = Issue.objects.filter(team=user.userprofile)
+        else:
+            queryset = Issue.objects.filter(team=user.developer.team)
+
+        context.update({
+            "unassigned_issue_count": queryset.filter(category__isnull=True).count()
+        })
+
+        return context
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_owner:
+            queryset = Category.objects.filter(team=user.userprofile)
+        else:
+            queryset = Category.objects.filter(team=user.developer.team)
+
+        return queryset
