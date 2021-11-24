@@ -32,3 +32,10 @@ class AssignDeveloperForm(forms.Form):
         developers = Developer.objects.filter(team=request.user.userprofile)
         super(AssignDeveloperForm, self).__init__(*args, **kwargs)
         self.fields["developer"].queryset = developers
+
+class IssueCategoryUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Issue
+        fields = (
+            'category',
+        )

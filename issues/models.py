@@ -25,7 +25,7 @@ class Issue(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=100)
     team = models.ForeignKey(UserProfile, on_delete=models.CASCADE) # team in which the developer belongs
     developer = models.ForeignKey("Developer", on_delete=models.SET_NULL, null=True, blank=True)
-    category = models.ForeignKey("Category", on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey("Category", related_name="issues", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.title} | {self.developer} | resolved: {self.resolved}"

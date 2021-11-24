@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.views import generic
 from .models import Issue, Category
-from .forms import IssueModelForm, CustomUserCreationForm, AssignDeveloperForm
+from .forms import IssueModelForm, CustomUserCreationForm, AssignDeveloperForm, IssueCategoryUpdateForm
 from developers.mixins import OwnerAndLoginRequiredMixin
 
 class SignupView(generic.CreateView):
@@ -148,3 +148,35 @@ class CategoryListView(LoginRequiredMixin, generic.ListView):
             queryset = Category.objects.filter(team=user.developer.team)
 
         return queryset
+
+class CategoryDetailView(LoginRequiredMixin, generic.DetailView):
+    template_name = "issues/category_detail.html"
+    context_object_name = "category"
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_owner:
+            queryset = Category.objects.filter(team=user.userprofile)
+        else:
+            queryset = Category.objects.filter(team=user.developer.team)
+
+        return queryset
+
+class IssueCategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "issues/issue_category_update.html"
+    form_class = IssueCategoryUpdateForm
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_owner:
+            queryset = Issue.objects.filter(team=user.userprofile)
+        else:
+            queryset = Issue.objects.filter(team=user.developer.team)
+            queryset = queryset.filter(developer__user=self.request.user)
+
+        return queryset
+
+    def get_success_url(self):
+        return reverse("issues:issue-detail", kwargs={"pk": self.get_object().id})

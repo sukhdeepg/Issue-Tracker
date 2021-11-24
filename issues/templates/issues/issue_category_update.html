@@ -10,17 +10,14 @@
                     <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ issue.title }}</h1>
                     <div class="flex mb-4">
                         <a href="{% url 'issues:issue-detail' issue.pk %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Description</a>
-                        <a href="{% url 'issues:issue-category-update' issue.pk %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Category</a>
-                        <a href="{% url 'issues:issue-update' issue.pk %}" class="flex-grow text-green-500 border-b-2 border-green-500 py-2 text-lg px-1">Update Details</a>
+                        <a href="{% url 'issues:issue-category-update' issue.pk %}" class="flex-grow text-green-500 border-b-2 border-green-500 py-2 text-lg px-1">Category</a>
+                        <a href="{% url 'issues:issue-update' issue.pk %}" class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Update Details</a>
                     </div>
                     <form method="post">
                         {% csrf_token %}
                         {{ form|crispy }}
                         <button type="submit" class="w-full text-white bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded-md">Submit</button>
                     </form>
-                    <div class="mt-5 py-5 border-t border-gray-200">
-                        <a href="{% url 'issues:issue-delete' issue.pk %}" class="w-1/2 mt-3 text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">Delete Issue</a>
-                    </div>
                 </div>
                 <img alt="ecommerce" class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded" src="https://dummyimage.com/400x400">
             </div>
