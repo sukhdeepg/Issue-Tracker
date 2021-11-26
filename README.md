@@ -2,8 +2,6 @@
 
 Issue Tracker is a Python web application to track open issues in your project.
 
-![](https://raw.githubusercontent.com/sukhdeepg/Issue-Tracker/main/static/images/issue_tracker.gif)
-
 ## Motivation
 
 - To learn fundamentals of Django web framework.
@@ -14,7 +12,9 @@ Issue Tracker is a Python web application to track open issues in your project.
 - To learn Tailwind CSS for front-end.
 
 - Understanding working of a management software.
-- 
+
+![](https://raw.githubusercontent.com/sukhdeepg/Issue-Tracker/main/static/images/issue_tracker.gif)
+
 ## Installation
 
 Install requirements
