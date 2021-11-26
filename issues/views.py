@@ -1,3 +1,4 @@
+from django.db.models.aggregates import Count
 from django.shortcuts import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
@@ -134,7 +135,9 @@ class CategoryListView(LoginRequiredMixin, generic.ListView):
             queryset = Issue.objects.filter(team=user.developer.team)
 
         context.update({
-            "unassigned_issue_count": queryset.filter(category__isnull=True).count()
+            "unassigned_issue_count": queryset.filter(category__isnull=True).count(),
+            "inprogress_issue_count": queryset.filter(category__name="InProgress").count(),
+            "completed_issue_count": queryset.filter(category__name="Completed").count()
         })
 
         return context

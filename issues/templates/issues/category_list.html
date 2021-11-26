@@ -22,12 +22,14 @@
                             <td class="px-4 py-3">Unassigned</td>
                             <td class="px-4 py-3">{{ unassigned_issue_count }}</td>
                         </tr>
-                        {% for category in category_list %}
-                            <tr>
-                                <td class="px-4 py-3"><a href="{% url 'issues:category-detail' category.pk %}">{{ category.name }}</a></td>
-                                <td class="px-4 py-3">TODO count</td>
-                            </tr>
-                        {% endfor %}
+                        <tr>
+                            <td class="px-4 py-3">In Progress</td>
+                            <td class="px-4 py-3">{{ inprogress_issue_count }}</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3">Completed</td>
+                            <td class="px-4 py-3">{{ completed_issue_count }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
