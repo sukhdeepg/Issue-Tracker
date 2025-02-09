@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="{% url 'issues:issue-list' %}">Go back to issues</a>
+
+    <hr>
+
+    <h1>Assign a developer to this issue</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+{% endblock content %}
